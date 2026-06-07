@@ -1,0 +1,30 @@
+﻿@model SystemCri.Domain.Entities.Depto
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Depto</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DeptoNom)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DeptoNom)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DeptoDescrip)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DeptoDescrip)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.DeptoCod">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
