@@ -1,20 +1,33 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace SystemCri.Domain.Entities;
+namespace SystemCri.Domain.Entities;
 
-//public class Usuario
-//{
-//    public int UsuarioId { get; set; }
-//    public string UsuarioNombre { get; set; } = null!;
-//    public string? UsuarioDescripcion { get; set; }
-//    public byte[]? UsuarioLogo { get; set; }
-//    public byte[]? UsuarioPie { get; set; }
-//    public string? UsuarioEtnia { get; set; }
-//    public int? UsuarioDepartamento { get; set; }
-//    public int? UsuarioMunicipio { get; set; }
-//    public int UsuarioEstado { get; set; }
-//}
+public class Usuario
+{
+    [Key]
+    public int UsuarioId { get; set; }
+
+    [Required]
+    public string UsuarioNombre { get; set; } = null!;
+
+    public string? UsuarioDescripcion { get; set; }
+    public byte[]? UsuarioLogo { get; set; }
+    public byte[]? UsuarioPie { get; set; }
+    public string? UsuarioEtnia { get; set; }
+
+    [ForeignKey(nameof(Departamento))]
+    public int? UsuarioDepartamento { get; set; }
+    public Depto? Departamento { get; set; }
+
+    [ForeignKey(nameof(Municipio))]
+    public int? UsuarioMunicipio { get; set; }
+    public Municipio? Municipio { get; set; }
+
+    public int UsuarioEstado { get; set; }
+}

@@ -12,7 +12,10 @@ namespace SystemCri.Infrastructure.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-       // public DbSet<Usuario> Usuarios => Set<Usuario>();
+       /// <summary>
+        /// Obtiene o establece el conjunto de entidades Usuario.
+        /// </summary>
+        public DbSet<Usuario> Usuarios => Set<Usuario>();
         public DbSet<Depto> Deptos => Set<Depto>();
         public DbSet<Municipio> Municipios => Set<Municipio>();
 
@@ -25,10 +28,24 @@ namespace SystemCri.Infrastructure.Data
                 .HasOne(m => m.Depto)
                 .WithMany() // Si quieres navegación inversa en Depto, añade ICollection<Municipio> en Depto y cámbialo a .WithMany(d => d.Municipios)
                 .HasForeignKey(m => m.DeptoCod)
-                .OnDelete(DeleteBehavior.Restrict) // Evitar borrado en cascada accidental
-                .IsRequired(false); // false porque DeptoCod es nullable; pon true si lo haces no-nullable
-        }
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
-        // public DbSet<TarjetaCredito> TarjetasCredito { get; set; }
+            // Configuración explícita de la relación Usuario -> Depto
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.Departamento)
+                .WithMany()
+                .HasForeignKey(u => u.UsuarioDepartamento)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+
+            // Configuración explícita de la relación Usuario -> Municipio
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.Municipio)
+                .WithMany()
+                .HasForeignKey(u => u.UsuarioMunicipio)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+        }
     }
 }
