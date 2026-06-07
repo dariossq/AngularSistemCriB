@@ -23,7 +23,7 @@ namespace SystemCri.Infrastructure
 
             // Registrar repositorios: interfaz -> implementación concreta
             services.AddScoped<IDeptoRepository, DeptoRepository>();
-            //services.AddScoped<IMunicipioRepository, MunicipioRepository>();
+            services.AddScoped<IMunicipioRepository, MunicipioRepository>();
             //services.AddScoped<IUsuarioRepository, UsuarioRepository>();
            
             return services;
