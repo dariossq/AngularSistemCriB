@@ -43,6 +43,28 @@ namespace SystemCri.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("UsuarioActivo")]
+        public async Task<ActionResult<IEnumerable<UsuarioResponseDto>>> GetUsuariosActivos()
+        {
+            var usuarios = await _usuarioRepository.GetAllAsync();
+            var activos = usuarios
+                .Where(u => u.UsuarioEstado == 1)
+                .Select(u => new UsuarioResponseDto
+                {
+                    Id = u.UsuarioId,
+                    UsuarioNombre = u.UsuarioNombre,
+                    UsuarioDescripcion = u.UsuarioDescripcion,
+                    UsuarioLogo = u.UsuarioLogo,
+                    UsuarioPie = u.UsuarioPie,
+                    UsuarioEtnia = u.UsuarioEtnia,
+                    UsuarioDepartamento = u.UsuarioDepartamento,
+                    UsuarioMunicipio = u.UsuarioMunicipio,
+                    UsuarioEstado = u.UsuarioEstado
+                });
+
+            return Ok(activos);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<UsuarioResponseDto>> GetUsuario(int id)
         {
