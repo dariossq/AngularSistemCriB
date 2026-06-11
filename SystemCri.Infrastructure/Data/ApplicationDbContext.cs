@@ -26,6 +26,7 @@ namespace SystemCri.Infrastructure.Data
         public DbSet<Escolaridad> Escolaridads => Set<Escolaridad>();
         public DbSet<Familia> Familias => Set<Familia>();
         public DbSet<Profesion> Profesions => Set<Profesion>();
+        public DbSet<Estadocivil> Estadocivils => Set<Estadocivil>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +41,15 @@ namespace SystemCri.Infrastructure.Data
                 entity.Property(e => e.ProfDescrip).HasColumnName("PROFISION_DESCRIP");
             });
 
+            // Configuración de Estadocivil ANTES del foreach automático
+            modelBuilder.Entity<Estadocivil>(entity =>
+            {
+                entity.ToTable("ESTADOCIVIL");
+                entity.Property(e => e.EstadocCod).HasColumnName("ESTADOC_COD");
+                entity.Property(e => e.EstadocNom).HasColumnName("ESTADOC_NOM");
+                entity.Property(e => e.EstadocDescrip).HasColumnName("ESTADOC_DESCRIP");
+            });
+
             modelBuilder.Entity<Depto>().ToTable("DEPTO");
             modelBuilder.Entity<Municipio>().ToTable("MUNICIPIO");
             modelBuilder.Entity<Usuario>().ToTable("USUARIO");
@@ -51,8 +61,8 @@ namespace SystemCri.Infrastructure.Data
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                // Skip Profesion - ya está configurada
-                if (entityType.ClrType == typeof(Profesion)) continue;
+                // Skip Profesion y Estadocivil - ya están configuradas
+                if (entityType.ClrType == typeof(Profesion) || entityType.ClrType == typeof(Estadocivil)) continue;
 
                 entityType.SetTableName(ToOracleName(entityType.GetTableName()));
 
