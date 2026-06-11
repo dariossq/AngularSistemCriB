@@ -28,6 +28,7 @@ namespace SystemCri.Infrastructure.Data
         public DbSet<Profesion> Profesions => Set<Profesion>();
         public DbSet<Estadocivil> Estadocivils => Set<Estadocivil>();
         public DbSet<Rol> Roles => Set<Rol>();
+        public DbSet<TipoId> TipoIds => Set<TipoId>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -119,6 +120,14 @@ namespace SystemCri.Infrastructure.Data
                 entity.Property(e => e.TicaCod).HasColumnName("TICA_COD");
                 entity.Property(e => e.TicaNombre).HasColumnName("TICA_NOMBRE");
                 entity.Property(e => e.TicaDescrip).HasColumnName("TICA_DESCRIP");
+            });
+
+            modelBuilder.Entity<TipoId>(entity =>
+            {
+                entity.ToTable("TIPO_ID");
+                entity.Property(e => e.TipoIdCod).HasColumnName("TIPO_ID_COD");
+                entity.Property(e => e.TipoIdNom).HasColumnName("TIPO_ID_NOM");
+                entity.Property(e => e.TipoIdSigla).HasColumnName("TIPO_ID_SIGLA");
             });
 
             modelBuilder.Entity<Rol>(entity =>
