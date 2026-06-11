@@ -27,6 +27,7 @@ namespace SystemCri.Infrastructure.Data
         public DbSet<Familia> Familias => Set<Familia>();
         public DbSet<Profesion> Profesions => Set<Profesion>();
         public DbSet<Estadocivil> Estadocivils => Set<Estadocivil>();
+        public DbSet<Rol> Roles => Set<Rol>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,6 +59,7 @@ namespace SystemCri.Infrastructure.Data
             modelBuilder.Entity<Seguridad>().ToTable("SEGURIDAD");
             modelBuilder.Entity<Genero>().ToTable("GENERO");
             modelBuilder.Entity<Escolaridad>().ToTable("ESCOLARIDAD");
+            modelBuilder.Entity<Rol>().ToTable("ROL");
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
@@ -117,6 +119,14 @@ namespace SystemCri.Infrastructure.Data
                 entity.Property(e => e.TicaCod).HasColumnName("TICA_COD");
                 entity.Property(e => e.TicaNombre).HasColumnName("TICA_NOMBRE");
                 entity.Property(e => e.TicaDescrip).HasColumnName("TICA_DESCRIP");
+            });
+
+            modelBuilder.Entity<Rol>(entity =>
+            {
+                entity.ToTable("ROL");
+                entity.Property(e => e.RolCod).HasColumnName("ROL_COD");
+                entity.Property(e => e.RolNom).HasColumnName("ROL_NOM");
+                entity.Property(e => e.RolDescrip).HasColumnName("ROL_DESCRIP");
             });
 
             // Configuración explícita de la relación Municipio -> Depto

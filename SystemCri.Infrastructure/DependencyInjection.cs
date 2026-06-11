@@ -49,6 +49,7 @@ namespace SystemCri.Infrastructure
             services.AddScoped<IFamiliaRepository, FamiliaRepository>();
             services.AddScoped<IProfesinRepository, ProfesinRepository>();
             services.AddScoped<IEstadocivilRepository, EstadocivilRepository>();
+            services.AddScoped<IRolRepository, RolRepository>();
            
             return services;
         }
