@@ -87,6 +87,34 @@ namespace SystemCri.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("{id}/logo")]
+        public async Task<IActionResult> GetUsuarioLogo(int id)
+        {
+            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            if (usuario == null) return NotFound();
+            if (usuario.UsuarioLogo == null || usuario.UsuarioLogo.Length == 0)
+            {
+                return NotFound($"Logo no encontrado para el usuario {id}.");
+            }
+
+            var contentType = GetImageContentType(usuario.UsuarioLogo);
+            return File(usuario.UsuarioLogo, contentType);
+        }
+
+        [HttpGet("{id}/pie")]
+        public async Task<IActionResult> GetUsuarioPie(int id)
+        {
+            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            if (usuario == null) return NotFound();
+            if (usuario.UsuarioPie == null || usuario.UsuarioPie.Length == 0)
+            {
+                return NotFound($"Imagen de pie no encontrada para el usuario {id}.");
+            }
+
+            var contentType = GetImageContentType(usuario.UsuarioPie);
+            return File(usuario.UsuarioPie, contentType);
+        }
+
         [HttpPost]
         public async Task<ActionResult<UsuarioResponseDto>> PostUsuario(UsuarioCreateDto dto)
         {
@@ -161,6 +189,26 @@ namespace SystemCri.API.Controllers
 
             await _usuarioRepository.UpdateAsync(usuarioExistente);
             return NoContent();
+        }
+
+        private static string GetImageContentType(byte[] imageData)
+        {
+            if (imageData.Length >= 8 && imageData[0] == 0x89 && imageData[1] == 0x50 && imageData[2] == 0x4E && imageData[3] == 0x47)
+            {
+                return "image/png";
+            }
+
+            if (imageData.Length >= 3 && imageData[0] == 0xFF && imageData[1] == 0xD8 && imageData[2] == 0xFF)
+            {
+                return "image/jpeg";
+            }
+
+            if (imageData.Length >= 4 && imageData[0] == 0x47 && imageData[1] == 0x49 && imageData[2] == 0x46)
+            {
+                return "image/gif";
+            }
+
+            return "application/octet-stream";
         }
 
         [HttpDelete("{id}")]

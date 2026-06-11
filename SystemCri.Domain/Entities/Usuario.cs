@@ -30,4 +30,10 @@ public class Usuario
     public Municipio? Municipio { get; set; }
 
     public int UsuarioEstado { get; set; }
+
+    // Relación con la tabla ACCESO
+    public ICollection<Acceso> Accesos { get; set; } = new List<Acceso>();
+
+    // Relación con la tabla VEREDA
+    public ICollection<Vereda> Veredas { get; set; } = new List<Vereda>();
 }
