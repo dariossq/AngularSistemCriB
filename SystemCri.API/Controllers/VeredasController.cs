@@ -33,6 +33,26 @@ namespace SystemCri.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Obtiene todas las veredas asociadas a un usuario específico por su ID.
+        /// </summary>
+        /// <param name="usuarioId"></param>
+        /// <returns></returns>
+        [HttpGet("usuario/{usuarioId}")]
+        public async Task<ActionResult<IEnumerable<VeredaResponseDto>>> GetVeredasByUsuarioId(int usuarioId)
+        {
+            var veredas = await _veredaRepository.GetByUsuarioIdAsync(usuarioId);
+            var result = veredas.Select(v => new VeredaResponseDto
+            {
+                Id = v.VeredaCod,
+                VeredaNom = v.VeredaNom,
+                VeredaUbicacion = v.VeredaUbicacion,
+                UsuarioId = v.UsuarioId
+            });
+
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<VeredaResponseDto>> GetVereda(int id)
         {

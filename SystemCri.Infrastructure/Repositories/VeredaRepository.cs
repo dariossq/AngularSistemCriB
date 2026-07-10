@@ -15,6 +15,9 @@ namespace SystemCri.Infrastructure.Repositories
 
         public async Task<IEnumerable<Vereda>> GetAllAsync() => await _context.Veredas.ToListAsync();
 
+        public async Task<IEnumerable<Vereda>> GetByUsuarioIdAsync(int usuarioId) =>
+            await _context.Veredas.Where(v => v.UsuarioId == usuarioId).ToListAsync();
+
         public async Task<Vereda?> GetByIdAsync(int id) => await _context.Veredas.FindAsync(id);
 
         public async Task AddAsync(Vereda vereda)

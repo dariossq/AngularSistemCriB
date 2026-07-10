@@ -7,6 +7,7 @@ namespace SystemCri.Domain.Interfaces
     public interface IVeredaRepository
     {
         Task<IEnumerable<Vereda>> GetAllAsync();
+        Task<IEnumerable<Vereda>> GetByUsuarioIdAsync(int usuarioId);
         Task<Vereda?> GetByIdAsync(int id);
         Task AddAsync(Vereda vereda);
         Task UpdateAsync(Vereda vereda);
