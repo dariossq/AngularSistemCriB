@@ -38,6 +38,24 @@ namespace SystemCri.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistsAsync(int id) => await _context.Usuarios.AnyAsync(e => e.UsuarioId == id);
+        public async Task<bool> ExistsAsync(int id)
+        {
+            var connection = _context.Database.GetDbConnection();
+            await using var command = connection.CreateCommand();
+            command.CommandText = "SELECT 1 FROM USUARIO WHERE USUARIO_ID = :id";
+
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "id";
+            parameter.Value = id;
+            command.Parameters.Add(parameter);
+
+            if (connection.State != System.Data.ConnectionState.Open)
+            {
+                await connection.OpenAsync();
+            }
+
+            await using var reader = await command.ExecuteReaderAsync();
+            return await reader.ReadAsync();
+        }
     }
 }
