@@ -52,11 +52,21 @@ namespace SystemCri.Infrastructure.Data
                 entity.Property(e => e.EstadocDescrip).HasColumnName("ESTADOC_DESCRIP");
             });
 
+            // Configuración de Vereda ANTES del foreach automático
+            modelBuilder.Entity<Vereda>(entity =>
+            {
+                entity.ToTable("VEREDA");
+                entity.HasKey(v => v.VeredaCod);
+                entity.Property(v => v.VeredaCod).HasColumnName("VEREDA_COD");
+                entity.Property(v => v.VeredaNom).HasColumnName("VERADA_NOM");
+                entity.Property(v => v.VeredaUbicacion).HasColumnName("VEREDA_UBICACION");
+                entity.Property(v => v.UsuarioId).HasColumnName("USUARIO_ID");
+            });
+
             modelBuilder.Entity<Depto>().ToTable("DEPTO");
             modelBuilder.Entity<Municipio>().ToTable("MUNICIPIO");
             modelBuilder.Entity<Usuario>().ToTable("USUARIO");
             modelBuilder.Entity<Acceso>().ToTable("ACCESO");
-            modelBuilder.Entity<Vereda>().ToTable("VEREDA");
             modelBuilder.Entity<Seguridad>().ToTable("SEGURIDAD");
             modelBuilder.Entity<Genero>().ToTable("GENERO");
             modelBuilder.Entity<Escolaridad>().ToTable("ESCOLARIDAD");
@@ -64,8 +74,8 @@ namespace SystemCri.Infrastructure.Data
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                // Skip Profesion y Estadocivil - ya están configuradas
-                if (entityType.ClrType == typeof(Profesion) || entityType.ClrType == typeof(Estadocivil)) continue;
+                // Skip Profesion, Estadocivil y Vereda - ya están configuradas
+                if (entityType.ClrType == typeof(Profesion) || entityType.ClrType == typeof(Estadocivil) || entityType.ClrType == typeof(Vereda)) continue;
 
                 entityType.SetTableName(ToOracleName(entityType.GetTableName()));
 
@@ -74,14 +84,6 @@ namespace SystemCri.Infrastructure.Data
                     property.SetColumnName(ToOracleName(property.Name));
                 }
             }
-
-            modelBuilder.Entity<Vereda>(entity =>
-            {
-                entity.Property(v => v.VeredaCod).HasColumnName("VEREDA_COD");
-                entity.Property(v => v.VeredaNom).HasColumnName("VERADA_NOM");
-                entity.Property(v => v.VeredaUbicacion).HasColumnName("VEREDA_UBICACION");
-                entity.Property(v => v.UsuarioId).HasColumnName("USUARIO_ID");
-            });
 
             modelBuilder.Entity<Seguridad>(entity =>
             {
@@ -177,11 +179,13 @@ namespace SystemCri.Infrastructure.Data
                 entity.Property(a => a.FechaFAcceso).HasColumnName("FECH_F_ACCESO");
             });
 
+            // Configuración simple de Vereda sin relación bidireccional para evitar conflictos
             modelBuilder.Entity<Vereda>()
                 .HasOne(v => v.Usuario)
-                .WithMany(u => u.Veredas)
+                .WithMany()
                 .HasForeignKey(v => v.UsuarioId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
         }
 
         private static string ToOracleName(string? name)

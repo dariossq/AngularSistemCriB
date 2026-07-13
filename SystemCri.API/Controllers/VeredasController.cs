@@ -102,8 +102,9 @@ namespace SystemCri.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVereda(int id, VeredaUpdateDto dto)
         {
-            var existing = await _veredaRepository.GetByIdAsync(id);
-            if (existing == null) return NotFound();
+            // Validar que la vereda existe
+            if (!await _veredaRepository.ExistsAsync(id))
+                return NotFound();
 
             if (dto.UsuarioId.HasValue)
             {
@@ -111,11 +112,16 @@ namespace SystemCri.API.Controllers
                 if (!usuarioExists) return BadRequest($"Usuario con id {dto.UsuarioId.Value} no existe.");
             }
 
-            existing.VeredaNom = dto.VeredaNom;
-            existing.VeredaUbicacion = dto.VeredaUbicacion;
-            existing.UsuarioId = dto.UsuarioId;
+            // Crear objeto para actualizar
+            var vereda = new Vereda
+            {
+                VeredaCod = id,
+                VeredaNom = dto.VeredaNom,
+                VeredaUbicacion = dto.VeredaUbicacion,
+                UsuarioId = dto.UsuarioId
+            };
 
-            await _veredaRepository.UpdateAsync(existing);
+            await _veredaRepository.UpdateAsync(vereda);
             return NoContent();
         }
 
